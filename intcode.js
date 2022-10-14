@@ -63,13 +63,6 @@ class IntcodeVM {
 
 exports.IntcodeVM = IntcodeVM;
 
-function runTests() {
-	const vm = new IntcodeVM();
-
-	vm.loadProgram("1,9,10,3,2,3,11,0,99,30,40,50");
-	console.log(vm.runUntilComplete());
-}
-
 function solution1() {
 	const vm = new IntcodeVM();
 	vm.loadProgramFromFile("question.txt");
@@ -102,6 +95,5 @@ function solution2(output) {
 	console.log(`Solution: ${100 * noun + verb}`);
 }
 
-//runTests();
 //solution1();
-solution2(19690720);
+//solution2(19690720);
