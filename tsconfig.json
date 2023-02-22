@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"outDir": "dist",
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "esnext",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"baseUrl": "src",
+	},
+	"lib": ["es2015"],
+}
