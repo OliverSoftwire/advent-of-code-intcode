@@ -2,7 +2,7 @@
 	"name": "intcode",
 	"version": "1.0.0",
 	"description": "Advent of Code IntCode",
-	"main": "/dist/index.js",
+	"main": "dist/index.js",
 	"scripts": {
 		"start": "ts-node src/index.ts",
 		"test": "jest"
@@ -24,6 +24,7 @@
 		"prettier": "^2.8.4",
 		"ts-jest": "^29.0.5",
 		"ts-node": "^10.9.1",
+		"tsconfig-paths": "^4.1.2",
 		"typescript": "^4.9.5"
 	}
 }

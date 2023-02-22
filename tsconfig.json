@@ -7,7 +7,10 @@
 		"target": "esnext",
 		"moduleResolution": "node",
 		"sourceMap": true,
-		"baseUrl": "src",
+		"baseUrl": "src"
 	},
 	"lib": ["es2015"],
+	"ts-node": {
+		"require": ["tsconfig-paths/register"]
+	}
 }
