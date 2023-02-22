@@ -1,17 +1,20 @@
 import { IntcodeVM } from "intcode";
+import { Solution } from "./Solution";
 
-function solution1() {
+function solution1(program: string) {
 	const vm = new IntcodeVM();
-	vm.loadProgramFromFile("question.txt");
+
+	vm.loadProgram(program);
 	vm.memory[1] = 12;
 	vm.memory[2] = 2;
-	console.log(vm.runUntilComplete()[0]);
+
+	return vm.runUntilComplete()[0];
 }
 
-function solution2(output: number) {
+function solution2(program: string, output: number) {
 	const vm = new IntcodeVM();
 
-	vm.loadProgramFromFile("question.txt");
+	vm.loadProgram(program);
 	const offset = vm.runUntilComplete()[0];
 
 	vm.reset();
@@ -25,12 +28,12 @@ function solution2(output: number) {
 	vm.memory[1] = noun;
 	vm.memory[2] = verb;
 	if (vm.runUntilComplete()[0] !== output) {
-		throw "Inputs do not produce desired output";
+		throw new Error("Inputs do not produce desired output");
 	}
 
-	console.log(`Noun: ${noun}, verb: ${verb}`);
-	console.log(`Solution: ${100 * noun + verb}`);
+	return 100 * noun + verb;
 }
 
-solution1();
-solution2(19690720);
+export default new Solution("Day 2", solution1, (input) =>
+	solution2(input, 19690720)
+);

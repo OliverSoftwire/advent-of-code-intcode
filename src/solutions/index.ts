@@ -1,1 +1,3 @@
-import "./day2";
+import day2 from "./day2";
+
+export default [day2];
