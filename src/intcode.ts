@@ -1,4 +1,5 @@
 import fs from "fs";
+import opcodes from "./opcodes";
 
 export class IntcodeVM {
 	program: number[] = [];
@@ -28,29 +29,28 @@ export class IntcodeVM {
 
 	step() {
 		if (this.halted) {
-			throw "Program has finished running, cannot execute instruction";
+			throw new Error(
+				"Program has finished running, cannot execute instruction"
+			);
 		}
 
-		const opcode = this.memory[this.instructionPointer];
+		const opcode = opcodes[this.memory[this.instructionPointer] % 100];
+		if (!opcode) {
+			throw new Error(
+				`Invalid opcode ${opcode} at position ${this.instructionPointer}`
+			);
+		}
+
 		const input0 = this.memory[this.instructionPointer + 1];
 		const input1 = this.memory[this.instructionPointer + 2];
 		const output = this.memory[this.instructionPointer + 3];
 
-		switch (opcode) {
-			case 1:
-				this.memory[output] = this.memory[input0] + this.memory[input1];
-				break;
-			case 2:
-				this.memory[output] = this.memory[input0] * this.memory[input1];
-				break;
-			case 99:
-				this.halted = true;
-				return false;
-			default:
-				throw `Invalid opcode ${opcode} at position ${this.instructionPointer}`;
+		opcode.action(this, this.memory[input0], this.memory[input1], output);
+		if (this.halted) {
+			return false;
 		}
 
-		this.instructionPointer += 4;
+		this.instructionPointer += opcode.stride;
 		return true;
 	}
 
