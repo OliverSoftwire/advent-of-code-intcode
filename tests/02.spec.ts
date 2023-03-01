@@ -19,17 +19,17 @@ describe("Day 2", () => {
 
 	it("should solve part 1", () => {
 		// When
-		const result = solution.run();
+		const result = solution.runPart1();
 
 		// Then
-		expect(result.part1).toBe(5534943);
+		expect(result).toBe(5534943);
 	});
 
 	it("should solve part 2", () => {
 		// When
-		const result = solution.run();
+		const result = solution.runPart2();
 
 		// Then
-		expect(result.part2).toBe(7603);
+		expect(result).toBe(7603);
 	});
 });

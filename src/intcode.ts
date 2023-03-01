@@ -32,6 +32,7 @@ export class IntcodeVM {
 		this.halted = false;
 		this.memory = [...this.program];
 		this.instructionPointer = 0;
+		this.instructionPointerModifiedThisCycle = false;
 	}
 
 	loadProgram(programData: string) {

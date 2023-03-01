@@ -61,6 +61,46 @@ opcode("OUT", 4, [ParameterType.Read], (vm, output) => {
 	vm.writeOutput(output);
 });
 
+opcode(
+	"JUMP_TRUE",
+	5,
+	[ParameterType.Read, ParameterType.Read],
+	(vm, valueToCheck, newAddress) => {
+		if (valueToCheck !== 0) {
+			vm.instructionPointer = newAddress;
+		}
+	}
+);
+
+opcode(
+	"JUMP_FALSE",
+	6,
+	[ParameterType.Read, ParameterType.Read],
+	(vm, valueToCheck, newAddress) => {
+		if (valueToCheck === 0) {
+			vm.instructionPointer = newAddress;
+		}
+	}
+);
+
+opcode(
+	"LESS_THAN",
+	7,
+	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
+	(vm, a, b, output) => {
+		vm.memory[output] = a < b ? 1 : 0;
+	}
+);
+
+opcode(
+	"EQUALS",
+	7,
+	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
+	(vm, a, b, output) => {
+		vm.memory[output] = a === b ? 1 : 0;
+	}
+);
+
 opcode("HALT", 99, [], (vm) => {
 	vm.halted = true;
 });

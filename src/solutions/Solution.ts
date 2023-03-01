@@ -27,10 +27,18 @@ export class Solution {
 		this.part2 = part2;
 	}
 
+	public runPart1(): SolutionResultType {
+		return this.part1(this.input);
+	}
+
+	public runPart2(): SolutionResultType | undefined {
+		return this.part2?.(this.input);
+	}
+
 	public run(): SolutionResult {
 		return {
-			part1: this.part1(this.input),
-			part2: this.part2?.(this.input),
+			part1: this.runPart1(),
+			part2: this.runPart2(),
 		};
 	}
 }
