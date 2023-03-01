@@ -12,7 +12,16 @@ export class IntcodeVM {
 	halted = true;
 
 	memory: number[] = [];
-	instructionPointer = 0;
+
+	private _instructionPointer = 0;
+	private instructionPointerModifiedThisCycle = false;
+	get instructionPointer() {
+		return this._instructionPointer;
+	}
+	set instructionPointer(value: number) {
+		this._instructionPointer = value;
+		this.instructionPointerModifiedThisCycle = true;
+	}
 
 	inputBuffer: number[] = [];
 	outputBuffer: number[] = [];
@@ -66,7 +75,11 @@ export class IntcodeVM {
 			return false;
 		}
 
-		this.instructionPointer += opcode.stride;
+		if (!this.instructionPointerModifiedThisCycle) {
+			this.instructionPointer += opcode.stride;
+		}
+
+		this.instructionPointerModifiedThisCycle = false;
 		return true;
 	}
 
