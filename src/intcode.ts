@@ -52,10 +52,11 @@ export class IntcodeVM {
 			);
 		}
 
-		const opcode = opcodes[this.memory[this.instructionPointer] % 100];
+		const opcodeId = this.memory[this.instructionPointer] % 100;
+		const opcode = opcodes[opcodeId];
 		if (!opcode) {
 			throw new Error(
-				`Invalid opcode ${opcode} at position ${this.instructionPointer}`
+				`Invalid opcode ${opcodeId} at position ${this.instructionPointer}`
 			);
 		}
 

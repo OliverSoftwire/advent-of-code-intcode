@@ -23,6 +23,11 @@ function opcode<NumParameters extends number>(
 	parameters: ParameterType[],
 	action: OpcodeFn
 ) {
+	if (opcodes[value]) {
+		throw new Error(
+			`Opcode ${value} has already been defined as ${opcodes[value].name}, cannot redefine as ${name}`
+		);
+	}
 	opcodes[value] = {
 		name,
 		value,
@@ -94,7 +99,7 @@ opcode(
 
 opcode(
 	"EQUALS",
-	7,
+	8,
 	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
 	(vm, a, b, output) => {
 		vm.memory[output] = a === b ? 1 : 0;

@@ -17,6 +17,29 @@ describe("Day 5", () => {
 		expect(result[4]).toBe(expected);
 	});
 
+	describe("part 2 examples", () => {
+		it("should pass the position mode equals example", () => {
+			// Given
+			const program = "3,9,8,9,10,9,4,9,99,-1,8";
+
+			const vm = new IntcodeVM();
+			vm.loadProgram(program);
+
+			// When
+			vm.writeInput(1);
+			vm.runUntilComplete();
+
+			vm.reset();
+
+			vm.writeInput(8);
+			vm.runUntilComplete();
+
+			// Then
+			expect(vm.readOutput()).toBe(0);
+			expect(vm.readOutput()).toBe(1);
+		});
+	});
+
 	it("should solve part 1", () => {
 		// When
 		const result = solution.run();
