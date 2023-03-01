@@ -2,35 +2,57 @@ import { IntcodeVM } from "./intcode";
 
 export type OpcodeFn = (vm: IntcodeVM, ...args: number[]) => void;
 
+export enum ParameterType {
+	Read,
+	Write,
+}
+
 export interface Opcode {
 	name: string;
 	value: number;
 	stride: number;
+	parameters: ParameterType[];
 	action: OpcodeFn;
 }
 
 const opcodes: { [value: number]: Opcode } = {};
 
-function opcode(name: string, value: number, action: OpcodeFn) {
+function opcode<NumParameters extends number>(
+	name: string,
+	value: number,
+	parameters: ParameterType[],
+	action: OpcodeFn
+) {
 	opcodes[value] = {
 		name,
 		value,
-		stride: action.length, // No need to subtract 1 for vm, as we need to add 1 for the opcode itself
+		parameters,
+		stride: parameters.length + 1,
 		action,
 	};
 }
 
-opcode("ADD", 1, (vm, a, b, writeAddr) => {
-	vm.memory[writeAddr] = a + b;
-});
-opcode("MUL", 2, (vm, a, b, writeAddr) => {
-	vm.memory[writeAddr] = a * b;
-});
+opcode(
+	"ADD",
+	1,
+	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
+	(vm, a, b, writeAddr) => {
+		vm.memory[writeAddr] = a + b;
+	}
+);
+opcode(
+	"MUL",
+	2,
+	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
+	(vm, a, b, writeAddr) => {
+		vm.memory[writeAddr] = a * b;
+	}
+);
 
-opcode("IN", 3, (vm, writeAddr) => {});
-opcode("OUT", 4, (vm, output) => {});
+opcode("IN", 3, [ParameterType.Write], (vm, writeAddr) => {});
+opcode("OUT", 4, [ParameterType.Read], (vm, output) => {});
 
-opcode("HALT", 99, (vm) => {
+opcode("HALT", 99, [], (vm) => {
 	vm.halted = true;
 });
 

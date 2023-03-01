@@ -1,5 +1,10 @@
 import fs from "fs";
-import opcodes from "./opcodes";
+import opcodes, { ParameterType } from "./opcodes";
+
+enum ParameterMode {
+	Position,
+	Immediate,
+}
 
 export class IntcodeVM {
 	program: number[] = [];
@@ -41,11 +46,19 @@ export class IntcodeVM {
 			);
 		}
 
-		const input0 = this.memory[this.instructionPointer + 1];
-		const input1 = this.memory[this.instructionPointer + 2];
-		const output = this.memory[this.instructionPointer + 3];
+		const parameterModes: ParameterMode[] = Math.floor(
+			this.memory[this.instructionPointer] / 100
+		)
+			.toString()
+			.split("")
+			.map(Number)
+			.reverse();
 
-		opcode.action(this, this.memory[input0], this.memory[input1], output);
+		const args = opcode.parameters.map(
+			this.getArgForParameter(parameterModes)
+		);
+
+		opcode.action(this, ...args);
 		if (this.halted) {
 			return false;
 		}
@@ -57,5 +70,27 @@ export class IntcodeVM {
 	runUntilComplete() {
 		while (this.step()) {}
 		return this.memory;
+	}
+
+	private getArgForParameter(parameterModes: ParameterMode[]) {
+		return (parameter: ParameterType, index: number) => {
+			const argument = this.memory[this.instructionPointer + 1 + index];
+
+			if (parameter === ParameterType.Write) {
+				return argument;
+			}
+
+			const mode = parameterModes[index] ?? ParameterMode.Position;
+			switch (mode) {
+				case ParameterMode.Position:
+					return this.memory[argument];
+				case ParameterMode.Immediate:
+					return argument;
+				default:
+					throw new Error(
+						`Invalid parameter mode ${mode} at position ${this.instructionPointer}`
+					);
+			}
+		};
 	}
 }
