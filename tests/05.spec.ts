@@ -38,6 +38,69 @@ describe("Day 5", () => {
 			expect(vm.readOutput()).toBe(0);
 			expect(vm.readOutput()).toBe(1);
 		});
+
+		it("should pass the position mode less than example", () => {
+			// Given
+			const program = "3,9,7,9,10,9,4,9,99,-1,8";
+
+			const vm = new IntcodeVM();
+			vm.loadProgram(program);
+
+			// When
+			vm.writeInput(1);
+			vm.runUntilComplete();
+
+			vm.reset();
+
+			vm.writeInput(8);
+			vm.runUntilComplete();
+
+			// Then
+			expect(vm.readOutput()).toBe(1);
+			expect(vm.readOutput()).toBe(0);
+		});
+
+		it("should pass the immediate mode equals example", () => {
+			// Given
+			const program = "3,3,1108,-1,8,3,4,3,99";
+
+			const vm = new IntcodeVM();
+			vm.loadProgram(program);
+
+			// When
+			vm.writeInput(1);
+			vm.runUntilComplete();
+
+			vm.reset();
+
+			vm.writeInput(8);
+			vm.runUntilComplete();
+
+			// Then
+			expect(vm.readOutput()).toBe(0);
+			expect(vm.readOutput()).toBe(1);
+		});
+
+		it("should pass the immediate mode less than example", () => {
+			// Given
+			const program = "3,3,1107,-1,8,3,4,3,99";
+
+			const vm = new IntcodeVM();
+			vm.loadProgram(program);
+
+			// When
+			vm.writeInput(1);
+			vm.runUntilComplete();
+
+			vm.reset();
+
+			vm.writeInput(8);
+			vm.runUntilComplete();
+
+			// Then
+			expect(vm.readOutput()).toBe(1);
+			expect(vm.readOutput()).toBe(0);
+		});
 	});
 
 	it("should solve part 1", () => {
