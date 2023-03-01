@@ -14,6 +14,9 @@ export class IntcodeVM {
 	memory: number[] = [];
 	instructionPointer = 0;
 
+	inputBuffer: number[] = [];
+	outputBuffer: number[] = [];
+
 	constructor() {}
 
 	reset() {
@@ -70,6 +73,22 @@ export class IntcodeVM {
 	runUntilComplete() {
 		while (this.step()) {}
 		return this.memory;
+	}
+
+	writeInput(input: number) {
+		this.inputBuffer.push(input);
+	}
+
+	readInput(): number | undefined {
+		return this.inputBuffer.shift();
+	}
+
+	writeOutput(output: number) {
+		this.outputBuffer.push(output);
+	}
+
+	readOutput(): number | undefined {
+		return this.outputBuffer.shift();
 	}
 
 	private getArgForParameter(parameterModes: ParameterMode[]) {

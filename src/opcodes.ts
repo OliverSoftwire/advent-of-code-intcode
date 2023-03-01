@@ -49,8 +49,17 @@ opcode(
 	}
 );
 
-opcode("IN", 3, [ParameterType.Write], (vm, writeAddr) => {});
-opcode("OUT", 4, [ParameterType.Read], (vm, output) => {});
+opcode("IN", 3, [ParameterType.Write], (vm, writeAddr) => {
+	const input = vm.readInput();
+	if (input === undefined) {
+		throw new Error("Failed to read input, buffer is empty");
+	}
+
+	vm.memory[writeAddr] = input;
+});
+opcode("OUT", 4, [ParameterType.Read], (vm, output) => {
+	vm.writeOutput(output);
+});
 
 opcode("HALT", 99, [], (vm) => {
 	vm.halted = true;
