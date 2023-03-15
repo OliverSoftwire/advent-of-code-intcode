@@ -1,5 +1,5 @@
 import { IntcodeVM } from "intcode";
-import { runPhaseSequence } from "../src/solutions/day7";
+import solution, { runPhaseSequence } from "solutions/day7";
 
 describe("Day 7", () => {
 	it("should pass the example program", () => {
@@ -57,7 +57,19 @@ describe("Day 7", () => {
 		});
 	});
 
-	xit("should solve part 1", () => {});
+	it("should solve part 1", () => {
+		// When
+		const result = solution.runPart1();
 
-	xit("should solve part 2", () => {});
+		// Then
+		expect(result).toBe(70597);
+	});
+
+	xit("should solve part 2", () => {
+		// When
+		const result = solution.runPart2();
+
+		// Then
+		expect(result).toBe(undefined);
+	});
 });

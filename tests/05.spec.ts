@@ -100,17 +100,17 @@ describe("Day 5", () => {
 
 	it("should solve part 1", () => {
 		// When
-		const result = solution.run();
+		const result = solution.runPart1();
 
 		// Then
-		expect(result.part1).toBe(5044655);
+		expect(result).toBe(5044655);
 	});
 
 	xit("should solve part 2", () => {
 		// When
-		const result = solution.run();
+		const result = solution.runPart2();
 
 		// Then
-		expect(result.part2).toBe(undefined);
+		expect(result).toBe(undefined);
 	});
 });
