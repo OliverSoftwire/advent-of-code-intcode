@@ -5,8 +5,8 @@ function solution1(program: string) {
 	const vm = new IntcodeVM();
 
 	vm.loadProgram(program);
-	vm.memory[1] = 12;
-	vm.memory[2] = 2;
+	vm.writeMemory(1, 12);
+	vm.writeMemory(2, 2);
 
 	return vm.runUntilComplete()[0];
 }
@@ -18,15 +18,15 @@ function solution2(program: string, output: number) {
 	const offset = vm.runUntilComplete()[0];
 
 	vm.reset();
-	vm.memory[1] = 1;
+	vm.writeMemory(1, 1);
 	const coefficient = vm.runUntilComplete()[0] - offset;
 
 	const noun = Math.floor((output - offset) / coefficient);
 	const verb = output - (coefficient * noun + offset);
 
 	vm.reset();
-	vm.memory[1] = noun;
-	vm.memory[2] = verb;
+	vm.writeMemory(1, noun);
+	vm.writeMemory(2, verb);
 	if (vm.runUntilComplete()[0] !== output) {
 		throw new Error("Inputs do not produce desired output");
 	}

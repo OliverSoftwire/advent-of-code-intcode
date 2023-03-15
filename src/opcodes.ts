@@ -42,7 +42,7 @@ opcode(
 	1,
 	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
 	(vm, a, b, writeAddr) => {
-		vm.memory[writeAddr] = a + b;
+		vm.writeMemory(writeAddr, a + b);
 	}
 );
 opcode(
@@ -50,7 +50,7 @@ opcode(
 	2,
 	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
 	(vm, a, b, writeAddr) => {
-		vm.memory[writeAddr] = a * b;
+		vm.writeMemory(writeAddr, a * b);
 	}
 );
 
@@ -60,7 +60,7 @@ opcode("IN", 3, [ParameterType.Write], (vm, writeAddr) => {
 		throw new Error("Failed to read input, buffer is empty");
 	}
 
-	vm.memory[writeAddr] = input;
+	vm.writeMemory(writeAddr, input);
 });
 opcode("OUT", 4, [ParameterType.Read], (vm, output) => {
 	vm.writeOutput(output);
@@ -93,7 +93,7 @@ opcode(
 	7,
 	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
 	(vm, a, b, output) => {
-		vm.memory[output] = a < b ? 1 : 0;
+		vm.writeMemory(output, a < b ? 1 : 0);
 	}
 );
 
@@ -102,9 +102,13 @@ opcode(
 	8,
 	[ParameterType.Read, ParameterType.Read, ParameterType.Write],
 	(vm, a, b, output) => {
-		vm.memory[output] = a === b ? 1 : 0;
+		vm.writeMemory(output, a === b ? 1 : 0);
 	}
 );
+
+opcode("RELATIVE_BASE_OFFSET", 9, [ParameterType.Read], (vm, offset) => {
+	vm.relativeBase += offset;
+});
 
 opcode("HALT", 99, [], (vm) => {
 	vm.halted = true;

@@ -4,6 +4,7 @@ import opcodes, { ParameterType } from "./opcodes";
 enum ParameterMode {
 	Position,
 	Immediate,
+	Relative,
 }
 
 export class IntcodeVM {
@@ -11,7 +12,7 @@ export class IntcodeVM {
 
 	halted = true;
 
-	memory: number[] = [];
+	private memory: number[] = [];
 
 	private _instructionPointer = 0;
 	private instructionPointerModifiedThisCycle = false;
@@ -22,6 +23,8 @@ export class IntcodeVM {
 		this._instructionPointer = value;
 		this.instructionPointerModifiedThisCycle = true;
 	}
+
+	relativeBase = 0;
 
 	inputBuffer: number[] = [];
 	outputBuffer: number[] = [];
@@ -52,7 +55,7 @@ export class IntcodeVM {
 			);
 		}
 
-		const opcodeId = this.memory[this.instructionPointer] % 100;
+		const opcodeId = this.readMemory(this.instructionPointer) % 100;
 		const opcode = opcodes[opcodeId];
 		if (!opcode) {
 			throw new Error(
@@ -61,7 +64,7 @@ export class IntcodeVM {
 		}
 
 		const parameterModes: ParameterMode[] = Math.floor(
-			this.memory[this.instructionPointer] / 100
+			this.readMemory(this.instructionPointer) / 100
 		)
 			.toString()
 			.split("")
@@ -87,13 +90,29 @@ export class IntcodeVM {
 
 	runUntilComplete() {
 		while (this.step()) {}
-		return this.memory;
+		return [...this.memory];
 	}
 
 	runUntilOutput() {
 		const prevOutputLen = this.outputBuffer.length;
 		while (this.step() && this.outputBuffer.length === prevOutputLen) {}
-		return this.memory;
+		return [...this.memory];
+	}
+
+	writeMemory(address: number, value: number) {
+		if (address < 0) {
+			throw new Error("Memory address must be positive");
+		}
+
+		this.memory[address] = value;
+	}
+
+	readMemory(address: number) {
+		if (address < 0) {
+			throw new Error("Memory address must be positive");
+		}
+
+		return this.memory[address] ?? 0;
 	}
 
 	writeInput(input: number) {
@@ -114,7 +133,9 @@ export class IntcodeVM {
 
 	private getArgForParameter(parameterModes: ParameterMode[]) {
 		return (parameter: ParameterType, index: number) => {
-			const argument = this.memory[this.instructionPointer + 1 + index];
+			const argument = this.readMemory(
+				this.instructionPointer + 1 + index
+			);
 
 			if (parameter === ParameterType.Write) {
 				return argument;
@@ -123,9 +144,11 @@ export class IntcodeVM {
 			const mode = parameterModes[index] ?? ParameterMode.Position;
 			switch (mode) {
 				case ParameterMode.Position:
-					return this.memory[argument];
+					return this.readMemory(argument);
 				case ParameterMode.Immediate:
 					return argument;
+				case ParameterMode.Relative:
+					return this.readMemory(this.relativeBase + argument);
 				default:
 					throw new Error(
 						`Invalid parameter mode ${mode} at position ${this.instructionPointer}`
