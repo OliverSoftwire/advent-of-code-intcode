@@ -76,7 +76,12 @@ function solution1(program: string) {
 }
 
 function solution2(program: string) {
-	return 0;
+	const phaseSequences = permuteArray([5, 6, 7, 8, 9]);
+	const results = phaseSequences.map((phaseSequence) =>
+		runPhaseSequenceWithFeedback(program, phaseSequence)
+	);
+
+	return Math.max(...results);
 }
 
 export default new Solution("Day 7", solution1, solution2);
