@@ -1,5 +1,8 @@
 import { IntcodeVM } from "intcode";
-import solution, { runPhaseSequence } from "solutions/day7";
+import solution, {
+	runPhaseSequence,
+	runPhaseSequenceWithFeedback,
+} from "solutions/day7";
 
 describe("Day 7", () => {
 	it("should pass the example program", () => {
@@ -17,7 +20,7 @@ describe("Day 7", () => {
 		expect(result[0]).toBe(expected);
 	});
 
-	describe("examples", () => {
+	describe("part 1 examples", () => {
 		it("should pass example 1", () => {
 			// Given
 			const program = "3,15,3,16,1002,16,10,16,1,16,15,15,4,15,99,0,0";
@@ -54,6 +57,34 @@ describe("Day 7", () => {
 
 			// Then
 			expect(power).toBe(65210);
+		});
+	});
+
+	describe("part 2 examples", () => {
+		it("should pass example 1", () => {
+			// Given
+			const program =
+				"3,26,1001,26,-4,26,3,27,1002,27,2,27,1,27,26,27,4,27,1001,28,-1,28,1005,28,6,99,0,0,5";
+			const phaseSequence = [9, 8, 7, 6, 5];
+
+			// When
+			const power = runPhaseSequenceWithFeedback(program, phaseSequence);
+
+			// Then
+			expect(power).toBe(139629729);
+		});
+
+		it("should pass example 2", () => {
+			// Given
+			const program =
+				"3,52,1001,52,-5,52,3,53,1,52,56,54,1007,54,5,55,1005,55,26,1001,54,-5,54,1105,1,12,1,53,54,53,1008,54,0,55,1001,55,1,55,2,53,55,53,4,53,1001,56,-1,56,1005,56,6,99,0,0,0,0,10";
+			const phaseSequence = [9, 7, 8, 5, 6];
+
+			// When
+			const power = runPhaseSequenceWithFeedback(program, phaseSequence);
+
+			// Then
+			expect(power).toBe(18216);
 		});
 	});
 

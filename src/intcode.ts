@@ -90,6 +90,12 @@ export class IntcodeVM {
 		return this.memory;
 	}
 
+	runUntilOutput() {
+		const prevOutputLen = this.outputBuffer.length;
+		while (this.step() && this.outputBuffer.length === prevOutputLen) {}
+		return this.memory;
+	}
+
 	writeInput(input: number) {
 		this.inputBuffer.push(input);
 	}

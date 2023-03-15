@@ -5,23 +5,16 @@ import { permuteArray } from "../utils/heapPermute";
 class Amplifier {
 	private vm = new IntcodeVM();
 
-	constructor(program: string) {
+	constructor(program: string, phase: number) {
 		this.vm.loadProgram(program);
+		this.vm.writeInput(phase);
 	}
 
-	run(phase: number, input: number): number {
-		this.vm.writeInput(phase);
+	run(input: number): number | undefined {
 		this.vm.writeInput(input);
+		this.vm.runUntilOutput();
 
-		this.vm.runUntilComplete();
-
-		const out = this.vm.readOutput();
-		if (out === undefined) {
-			throw new Error("Output is undefined");
-		}
-
-		this.vm.reset();
-		return out;
+		return this.vm.readOutput();
 	}
 }
 
@@ -29,12 +22,48 @@ export function runPhaseSequence(
 	program: string,
 	phaseSequence: number[]
 ): number {
-	const amplifiers = phaseSequence.map(() => new Amplifier(program));
-
-	return amplifiers.reduce(
-		(input, amplifier, index) => amplifier.run(phaseSequence[index], input),
-		0
+	const amplifiers = phaseSequence.map(
+		(phase) => new Amplifier(program, phase)
 	);
+
+	return amplifiers.reduce((input, amplifier) => {
+		const output = amplifier.run(input);
+		if (output === undefined) {
+			throw new Error("Amplifier terminated early");
+		}
+
+		return output;
+	}, 0);
+}
+
+export function runPhaseSequenceWithFeedback(
+	program: string,
+	phaseSequence: number[]
+): number {
+	const amplifiers = phaseSequence.map(
+		(phase) => new Amplifier(program, phase)
+	);
+
+	let lastOutput = 0;
+	while (true) {
+		const output = amplifiers.reduce(
+			(input: number | undefined, amplifier) => {
+				if (input === undefined) {
+					return undefined;
+				}
+
+				return amplifier.run(input);
+			},
+			lastOutput
+		);
+
+		if (output === undefined) {
+			break;
+		}
+		lastOutput = output;
+	}
+
+	return lastOutput;
 }
 
 function solution1(program: string) {
@@ -46,4 +75,8 @@ function solution1(program: string) {
 	return Math.max(...results);
 }
 
-export default new Solution("Day 7", solution1);
+function solution2(program: string) {
+	return 0;
+}
+
+export default new Solution("Day 7", solution1, solution2);
