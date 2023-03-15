@@ -1,5 +1,6 @@
 import { IntcodeVM } from "intcode";
 import { Solution } from "./Solution";
+import { permuteArray } from "../utils/heapPermute";
 
 class Amplifier {
 	private vm = new IntcodeVM();
@@ -36,8 +37,13 @@ export function runPhaseSequence(
 	);
 }
 
-function solution1() {
-	return 0;
+function solution1(program: string) {
+	const phaseSequences = permuteArray([0, 1, 2, 3, 4]);
+	const results = phaseSequences.map((phaseSequence) =>
+		runPhaseSequence(program, phaseSequence)
+	);
+
+	return Math.max(...results);
 }
 
 export default new Solution("Day 7", solution1);
