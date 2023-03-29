@@ -1,4 +1,5 @@
 import { IntcodeVM } from "../src/intcode";
+import solution from "../src/solutions/day9";
 
 describe("Day 9", () => {
 	describe("part 1 examples", () => {
@@ -46,5 +47,13 @@ describe("Day 9", () => {
 			// Then
 			expect(vm.readOutput()).toBe(program[1]);
 		});
+	});
+
+	it("should solve part 1", () => {
+		// When
+		const result = solution.runPart1();
+
+		// Then
+		expect(result).toBe(2494485073);
 	});
 });
