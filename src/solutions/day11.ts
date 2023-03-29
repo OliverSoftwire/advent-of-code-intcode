@@ -104,11 +104,7 @@ class Robot {
 	}
 
 	private hashCurrentPosition() {
-		return this.hashPosition(this.position);
-	}
-
-	private hashPosition(position: Vector2) {
-		return `${position.x},${position.y}`;
+		return `${this.position.x},${this.position.y}`;
 	}
 
 	private rotateLeft() {
