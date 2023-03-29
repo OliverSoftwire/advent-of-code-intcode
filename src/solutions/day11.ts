@@ -2,6 +2,7 @@ import { Solution } from "./Solution";
 import { IntcodeVM } from "../intcode";
 import { mod } from "../utils/mod";
 import { Vector2 } from "../utils/Vector2";
+import { TextDisplay } from "../utils/TextDisplay";
 
 enum Direction {
 	Up,
@@ -17,8 +18,23 @@ const DIRECTIONS: Vector2[] = [
 	new Vector2(-1, 0),
 ];
 
+enum PaletteIndex {
+	Black,
+	White,
+}
+
+const palette = {
+	[PaletteIndex.Black]: {
+		character: " ",
+	},
+	[PaletteIndex.White]: {
+		character: "█",
+	},
+};
+
 class Robot {
 	vm = new IntcodeVM();
+	display = new TextDisplay<PaletteIndex>(palette, PaletteIndex.Black);
 
 	private position: Vector2 = new Vector2(0, 0);
 	private direction = Direction.Up;
@@ -32,7 +48,7 @@ class Robot {
 		this.vm.loadProgram(program);
 
 		if (startOnWhite) {
-			this.map[this.hashCurrentPosition()] = 1;
+			this.paintSquare(1);
 		}
 	}
 
@@ -63,17 +79,7 @@ class Robot {
 	}
 
 	renderImage() {
-		let buffer = "";
-		for (let y = this.minPosition.y; y <= this.maxPosition.y; y++) {
-			for (let x = this.minPosition.x; x <= this.maxPosition.x; x++) {
-				buffer += this.map[this.hashPosition(new Vector2(x, y))]
-					? "█"
-					: " ";
-			}
-			buffer += "\n";
-		}
-
-		return buffer;
+		return this.display.render();
 	}
 
 	private getCurrentSquareColour() {
@@ -82,6 +88,10 @@ class Robot {
 
 	private paintSquare(colour: number) {
 		this.map[this.hashCurrentPosition()] = colour;
+		this.display.paintCell(
+			this.position,
+			colour === 0 ? PaletteIndex.Black : PaletteIndex.White
+		);
 	}
 
 	private moveForwards() {
