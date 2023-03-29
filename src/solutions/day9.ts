@@ -12,4 +12,15 @@ function solution1(program: string) {
 	return vm.readOutput() ?? 0;
 }
 
-export default new Solution("Day 9", solution1);
+function solution2(program: string) {
+	const vm = new IntcodeVM();
+
+	vm.loadProgram(program);
+	vm.writeInput(2);
+
+	vm.runUntilComplete();
+
+	return vm.readOutput() ?? 0;
+}
+
+export default new Solution("Day 9", solution1, solution2);
