@@ -137,23 +137,36 @@ export class IntcodeVM {
 				this.instructionPointer + 1 + index
 			);
 
-			if (parameter === ParameterType.Write) {
+			const mode = parameterModes[index] ?? ParameterMode.Position;
+			if (mode === ParameterMode.Immediate) {
+				if (parameter === ParameterType.Write) {
+					throw new Error("Cannot write to an immediate parameter");
+				}
+
 				return argument;
 			}
 
-			const mode = parameterModes[index] ?? ParameterMode.Position;
-			switch (mode) {
-				case ParameterMode.Position:
-					return this.readMemory(argument);
-				case ParameterMode.Immediate:
-					return argument;
-				case ParameterMode.Relative:
-					return this.readMemory(this.relativeBase + argument);
-				default:
-					throw new Error(
-						`Invalid parameter mode ${mode} at position ${this.instructionPointer}`
-					);
-			}
+			const address = this.getAddressForParameter(mode, argument);
+			return parameter === ParameterType.Read
+				? this.readMemory(address)
+				: address;
 		};
+	}
+
+	private getAddressForParameter(mode: ParameterMode, argument: number) {
+		switch (mode) {
+			case ParameterMode.Position:
+				return argument;
+			case ParameterMode.Relative:
+				return this.relativeBase + argument;
+			case ParameterMode.Immediate:
+				throw new Error(
+					"Cannot interpret immediate mode parameter as an address"
+				);
+			default:
+				throw new Error(
+					`Invalid parameter mode ${mode} at position ${this.instructionPointer}`
+				);
+		}
 	}
 }

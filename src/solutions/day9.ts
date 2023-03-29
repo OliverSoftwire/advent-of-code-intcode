@@ -9,8 +9,6 @@ function solution1(program: string) {
 
 	vm.runUntilComplete();
 
-	vm.outputBuffer.forEach((o) => console.log("Output: ", o));
-
 	return vm.readOutput() ?? 0;
 }
 
