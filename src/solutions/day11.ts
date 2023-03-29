@@ -1,8 +1,7 @@
 import { Solution } from "./Solution";
 import { IntcodeVM } from "../intcode";
 import { mod } from "../utils/mod";
-
-type Vector = [number, number];
+import { Vector2 } from "../utils/Vector2";
 
 enum Direction {
 	Up,
@@ -11,23 +10,23 @@ enum Direction {
 	Left,
 }
 
-const DIRECTIONS: Vector[] = [
-	[0, -1],
-	[1, 0],
-	[0, 1],
-	[-1, 0],
+const DIRECTIONS: Vector2[] = [
+	new Vector2(0, -1),
+	new Vector2(1, 0),
+	new Vector2(0, 1),
+	new Vector2(-1, 0),
 ];
 
 class Robot {
 	vm = new IntcodeVM();
 
-	private position: Vector = [0, 0];
+	private position: Vector2 = new Vector2(0, 0);
 	private direction = Direction.Up;
 
 	private map: Record<string, number> = {};
 
-	private minPosition: Vector = [0, 0];
-	private maxPosition: Vector = [0, 0];
+	private minPosition: Vector2 = new Vector2(0, 0);
+	private maxPosition: Vector2 = new Vector2(0, 0);
 
 	constructor(program: string, startOnWhite?: boolean) {
 		this.vm.loadProgram(program);
@@ -65,9 +64,11 @@ class Robot {
 
 	renderImage() {
 		let buffer = "";
-		for (let y = this.minPosition[1]; y <= this.maxPosition[1]; y++) {
-			for (let x = this.minPosition[0]; x <= this.maxPosition[0]; x++) {
-				buffer += this.map[this.hashPosition([x, y])] ? "█" : " ";
+		for (let y = this.minPosition.y; y <= this.maxPosition.y; y++) {
+			for (let x = this.minPosition.x; x <= this.maxPosition.x; x++) {
+				buffer += this.map[this.hashPosition(new Vector2(x, y))]
+					? "█"
+					: " ";
 			}
 			buffer += "\n";
 		}
@@ -86,22 +87,18 @@ class Robot {
 	private moveForwards() {
 		const delta = DIRECTIONS[this.direction];
 
-		this.position[0] += delta[0];
-		this.position[1] += delta[1];
+		this.position = this.position.add(delta);
 
-		this.minPosition[0] = Math.min(this.position[0], this.minPosition[0]);
-		this.minPosition[1] = Math.min(this.position[1], this.minPosition[1]);
-
-		this.maxPosition[0] = Math.max(this.position[0], this.maxPosition[0]);
-		this.maxPosition[1] = Math.max(this.position[1], this.maxPosition[1]);
+		this.minPosition = this.minPosition.min(this.position);
+		this.maxPosition = this.maxPosition.max(this.position);
 	}
 
 	private hashCurrentPosition() {
 		return this.hashPosition(this.position);
 	}
 
-	private hashPosition(position: Vector) {
-		return `${position[0]},${position[1]}`;
+	private hashPosition(position: Vector2) {
+		return `${position.x},${position.y}`;
 	}
 
 	private rotateLeft() {
