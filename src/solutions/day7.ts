@@ -12,9 +12,7 @@ class Amplifier {
 
 	run(input: number): number | undefined {
 		this.vm.writeInput(input);
-		this.vm.runUntilOutput();
-
-		return this.vm.readOutput();
+		return this.vm.runUntilOutput();
 	}
 }
 

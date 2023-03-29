@@ -94,9 +94,13 @@ export class IntcodeVM {
 	}
 
 	runUntilOutput() {
+		if (this.halted) {
+			return undefined;
+		}
+
 		const prevOutputLen = this.outputBuffer.length;
 		while (this.step() && this.outputBuffer.length === prevOutputLen) {}
-		return [...this.memory];
+		return this.halted ? undefined : this.outputBuffer.pop();
 	}
 
 	writeMemory(address: number, value: number) {
