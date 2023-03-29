@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-export type SolutionResultType = number;
+export type SolutionResultType = number | string;
 
 export type SolutionPart = (input: string) => SolutionResultType;
 
