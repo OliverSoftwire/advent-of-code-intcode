@@ -56,4 +56,12 @@ describe("Day 9", () => {
 		// Then
 		expect(result).toBe(2494485073);
 	});
+
+	it("should solve part 2", () => {
+		// When
+		const result = solution.runPart2();
+
+		// Then
+		expect(result).toBe(44997);
+	});
 });
