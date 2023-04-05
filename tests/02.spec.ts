@@ -17,19 +17,19 @@ describe("Day 2", () => {
 		expect(result[0]).toBe(expected);
 	});
 
-	it("should solve part 1", () => {
+	it("should solve part 1", async () => {
 		// When
 		const result = solution.runPart1();
 
 		// Then
-		expect(result).resolves.toBe(5534943);
+		await expect(result).resolves.toBe(5534943);
 	});
 
-	it("should solve part 2", () => {
+	it("should solve part 2", async () => {
 		// When
 		const result = solution.runPart2();
 
 		// Then
-		expect(result).resolves.toBe(7603);
+		await expect(result).resolves.toBe(7603);
 	});
 });

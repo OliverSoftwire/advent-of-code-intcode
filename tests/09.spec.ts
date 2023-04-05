@@ -49,19 +49,19 @@ describe("Day 9", () => {
 		});
 	});
 
-	it("should solve part 1", () => {
+	it("should solve part 1", async () => {
 		// When
 		const result = solution.runPart1();
 
 		// Then
-		expect(result).resolves.toBe(2494485073);
+		await expect(result).resolves.toBe(2494485073);
 	});
 
-	it("should solve part 2", () => {
+	it("should solve part 2", async () => {
 		// When
 		const result = solution.runPart2();
 
 		// Then
-		expect(result).resolves.toBe(44997);
+		await expect(result).resolves.toBe(44997);
 	});
 });
