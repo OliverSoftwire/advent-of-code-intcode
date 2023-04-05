@@ -6,6 +6,7 @@ export type SolutionResultType = number | string;
 export type SolutionPart = (input: string) => SolutionResultType;
 
 export interface SolutionResult {
+	day: number;
 	part1: SolutionResultType;
 	part2?: SolutionResultType;
 }
@@ -30,6 +31,7 @@ export class Solution {
 
 	public async run(): Promise<SolutionResult> {
 		return {
+			day: this.day,
 			part1: await this.runPart1(),
 			part2: await this.runPart2(),
 		};
