@@ -6,6 +6,14 @@ enum ParameterMode {
 	Relative,
 }
 
+class IntcodeError extends Error {
+	constructor(vm: IntcodeVM, message: string) {
+		super(
+			`Error in Intcode VM at address ${vm.instructionPointer}: ${message}`
+		);
+	}
+}
+
 export class IntcodeVM {
 	program: number[] = [];
 
@@ -44,7 +52,7 @@ export class IntcodeVM {
 
 	step() {
 		if (this.halted) {
-			throw new Error(
+			this.throwVMError(
 				"Program has finished running, cannot execute instruction"
 			);
 		}
@@ -52,9 +60,7 @@ export class IntcodeVM {
 		const opcodeId = this.readMemory(this.instructionPointer) % 100;
 		const opcode = opcodes[opcodeId];
 		if (!opcode) {
-			throw new Error(
-				`Invalid opcode ${opcodeId} at position ${this.instructionPointer}`
-			);
+			this.throwVMError(`Invalid opcode ${opcodeId}`);
 		}
 
 		const args = opcode.parameters.map(this.getArgForParameter());
@@ -89,7 +95,7 @@ export class IntcodeVM {
 
 	writeMemory(address: number, value: number) {
 		if (address < 0) {
-			throw new Error("Memory address must be positive");
+			this.throwVMError("Memory address must be positive");
 		}
 
 		this.memory[address] = value;
@@ -97,7 +103,7 @@ export class IntcodeVM {
 
 	readMemory(address: number) {
 		if (address < 0) {
-			throw new Error("Memory address must be positive");
+			this.throwVMError("Memory address must be positive");
 		}
 
 		return this.memory[address] ?? 0;
@@ -138,7 +144,7 @@ export class IntcodeVM {
 			const mode = parameterModes[index] ?? ParameterMode.Position;
 			if (mode === ParameterMode.Immediate) {
 				if (parameter === ParameterType.Write) {
-					throw new Error("Cannot write to an immediate parameter");
+					this.throwVMError("Cannot write to an immediate parameter");
 				}
 
 				return argument;
@@ -158,13 +164,15 @@ export class IntcodeVM {
 			case ParameterMode.Relative:
 				return this.relativeBase + argument;
 			case ParameterMode.Immediate:
-				throw new Error(
+				this.throwVMError(
 					"Cannot interpret immediate mode parameter as an address"
 				);
 			default:
-				throw new Error(
-					`Invalid parameter mode ${mode} at position ${this.instructionPointer}`
-				);
+				this.throwVMError(`Invalid parameter mode ${mode}`);
 		}
+	}
+
+	private throwVMError(message: string): never {
+		throw new IntcodeError(this, message);
 	}
 }
