@@ -43,11 +43,6 @@ export class IntcodeVM {
 		this.reset();
 	}
 
-	loadProgramFromFile(path: string) {
-		const programData = fs.readFileSync(path);
-		this.loadProgram(programData.toString());
-	}
-
 	step() {
 		if (this.halted) {
 			throw new Error(
