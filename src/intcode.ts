@@ -1,4 +1,3 @@
-import fs from "fs";
 import opcodes, { ParameterType } from "./opcodes";
 
 enum ParameterMode {
@@ -58,17 +57,7 @@ export class IntcodeVM {
 			);
 		}
 
-		const parameterModes: ParameterMode[] = Math.floor(
-			this.readMemory(this.instructionPointer) / 100
-		)
-			.toString()
-			.split("")
-			.map(Number)
-			.reverse();
-
-		const args = opcode.parameters.map(
-			this.getArgForParameter(parameterModes)
-		);
+		const args = opcode.parameters.map(this.getArgForParameter());
 
 		opcode.action(this, ...args);
 		if (this.halted) {
@@ -130,7 +119,17 @@ export class IntcodeVM {
 		return this.outputBuffer.shift();
 	}
 
-	private getArgForParameter(parameterModes: ParameterMode[]) {
+	private decodeParameterModes(): ParameterMode[] {
+		return Math.floor(this.readMemory(this.instructionPointer) / 100)
+			.toString()
+			.split("")
+			.map(Number)
+			.reverse();
+	}
+
+	private getArgForParameter() {
+		const parameterModes = this.decodeParameterModes();
+
 		return (parameter: ParameterType, index: number) => {
 			const argument = this.readMemory(
 				this.instructionPointer + 1 + index
