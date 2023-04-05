@@ -1,67 +1,65 @@
 import { IntcodeVM } from "../src/intcode";
 import solution from "../src/solutions/day9";
 
-describe("Day 9", () => {
-	describe("part 1 examples", () => {
-		it("should pass example 1", () => {
-			// Given
-			const program = [
-				109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006,
-				101, 0, 99,
-			];
+describe("part 1 examples", () => {
+	it("should pass example 1", () => {
+		// Given
+		const program = [
+			109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101,
+			0, 99,
+		];
 
-			const vm = new IntcodeVM();
-			vm.loadProgram(program.join(","));
+		const vm = new IntcodeVM();
+		vm.loadProgram(program.join(","));
 
-			// When
-			vm.runUntilComplete();
-
-			// Then
-			expect(vm.outputBuffer).toEqual(program);
-		});
-
-		it("should pass example 2", () => {
-			// Given
-			const program = "1102,34915192,34915192,7,4,7,99,0";
-
-			const vm = new IntcodeVM();
-			vm.loadProgram(program);
-
-			// When
-			vm.runUntilComplete();
-
-			// Then
-			expect(vm.readOutput()?.toString()).toMatch(/\d{16}/);
-		});
-
-		it("should pass example 3", () => {
-			// Given
-			const program = [104, 1125899906842624, 99];
-
-			const vm = new IntcodeVM();
-			vm.loadProgram(program.join(","));
-
-			// When
-			vm.runUntilComplete();
-
-			// Then
-			expect(vm.readOutput()).toBe(program[1]);
-		});
-	});
-
-	it("should solve part 1", async () => {
 		// When
-		const result = solution.runPart1();
+		vm.runUntilComplete();
 
 		// Then
-		await expect(result).resolves.toBe(2494485073);
+		expect(vm.outputBuffer).toEqual(program);
 	});
 
-	it("should solve part 2", async () => {
+	it("should pass example 2", () => {
+		// Given
+		const program = "1102,34915192,34915192,7,4,7,99,0";
+
+		const vm = new IntcodeVM();
+		vm.loadProgram(program);
+
 		// When
-		const result = solution.runPart2();
+		vm.runUntilComplete();
 
 		// Then
-		await expect(result).resolves.toBe(44997);
+		expect(vm.readOutput()?.toString()).toMatch(/\d{16}/);
 	});
+
+	it("should pass example 3", () => {
+		// Given
+		const program = [104, 1125899906842624, 99];
+
+		const vm = new IntcodeVM();
+		vm.loadProgram(program.join(","));
+
+		// When
+		vm.runUntilComplete();
+
+		// Then
+		expect(vm.readOutput()).toBe(program[1]);
+	});
+});
+
+it("should solve part 1", async () => {
+	// When
+	const result = solution.runPart1();
+
+	// Then
+	await expect(result).resolves.toBe(2494485073);
+});
+
+it("should solve part 2", async () => {
+	// When
+	const result = solution.runPart2();
+
+	// Then
+	await expect(result).resolves.toBe(44997);
 });
