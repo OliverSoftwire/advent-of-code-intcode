@@ -41,9 +41,6 @@ class Robot {
 
 	private map: Record<string, number> = {};
 
-	private minPosition: Vector2 = new Vector2(0, 0);
-	private maxPosition: Vector2 = new Vector2(0, 0);
-
 	constructor(program: string, startOnWhite?: boolean) {
 		this.vm.loadProgram(program);
 
@@ -96,11 +93,7 @@ class Robot {
 
 	private moveForwards() {
 		const delta = DIRECTIONS[this.direction];
-
 		this.position = this.position.add(delta);
-
-		this.minPosition = this.minPosition.min(this.position);
-		this.maxPosition = this.maxPosition.max(this.position);
 	}
 
 	private hashCurrentPosition() {
