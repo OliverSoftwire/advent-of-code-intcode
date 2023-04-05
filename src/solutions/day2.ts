@@ -34,6 +34,6 @@ function solution2(program: string, output: number) {
 	return 100 * noun + verb;
 }
 
-export default new Solution("Day 2", solution1, (input) =>
+export default new Solution(2, solution1, (input) =>
 	solution2(input, 19690720)
 );

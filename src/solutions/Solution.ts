@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 
 export type SolutionResultType = number | string;
@@ -11,34 +11,35 @@ export interface SolutionResult {
 }
 
 export class Solution {
-	name: string;
-	input: string;
-
-	part1: SolutionPart;
-	part2?: SolutionPart;
-
-	constructor(name: string, part1: SolutionPart, part2?: SolutionPart) {
-		this.name = name;
-		this.input = fs
-			.readFileSync(path.join("questions", this.name + ".txt"))
-			.toString();
-
+	constructor(
+		public day: number,
+		private readonly part1: SolutionPart,
+		private readonly part2?: SolutionPart
+	) {
 		this.part1 = part1;
 		this.part2 = part2;
 	}
 
-	public runPart1(): SolutionResultType {
-		return this.part1(this.input);
+	public async runPart1(): Promise<SolutionResultType> {
+		return this.part1(await this.getPuzzleInput());
 	}
 
-	public runPart2(): SolutionResultType | undefined {
-		return this.part2?.(this.input);
+	public async runPart2(): Promise<SolutionResultType | undefined> {
+		return this.part2?.(await this.getPuzzleInput());
 	}
 
-	public run(): SolutionResult {
+	public async run(): Promise<SolutionResult> {
 		return {
-			part1: this.runPart1(),
-			part2: this.runPart2(),
+			part1: await this.runPart1(),
+			part2: await this.runPart2(),
 		};
+	}
+
+	private async getPuzzleInput(): Promise<string> {
+		const fileContents = await fs.readFile(
+			path.join("questions", `Day ${this.day}.txt`)
+		);
+
+		return fileContents.toString();
 	}
 }

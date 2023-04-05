@@ -6,7 +6,7 @@ describe("Day 9", () => {
 		const result = solution.runPart1();
 
 		// Then
-		expect(result).toBe(1876);
+		expect(result).resolves.toBe(1876);
 	});
 
 	it("should solve part 2", () => {
@@ -14,7 +14,7 @@ describe("Day 9", () => {
 		const result = solution.runPart2();
 
 		// Then
-		expect(result).toMatchInlineSnapshot(`
+		expect(result).resolves.toMatchInlineSnapshot(`
 		"  ██   ██  ███    ██  ██   ██   ██  █      
 		 █  █ █  █ █  █    █ █  █ █  █ █  █ █      
 		 █    █    █  █    █ █    █    █    █      

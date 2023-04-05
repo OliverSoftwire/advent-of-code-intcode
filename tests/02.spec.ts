@@ -22,7 +22,7 @@ describe("Day 2", () => {
 		const result = solution.runPart1();
 
 		// Then
-		expect(result).toBe(5534943);
+		expect(result).resolves.toBe(5534943);
 	});
 
 	it("should solve part 2", () => {
@@ -30,6 +30,6 @@ describe("Day 2", () => {
 		const result = solution.runPart2();
 
 		// Then
-		expect(result).toBe(7603);
+		expect(result).resolves.toBe(7603);
 	});
 });

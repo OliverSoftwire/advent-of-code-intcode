@@ -23,4 +23,4 @@ function solution2(program: string) {
 	return vm.readOutput() ?? 0;
 }
 
-export default new Solution("Day 9", solution1, solution2);
+export default new Solution(9, solution1, solution2);

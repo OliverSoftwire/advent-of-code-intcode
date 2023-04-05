@@ -103,7 +103,7 @@ describe("Day 5", () => {
 		const result = solution.runPart1();
 
 		// Then
-		expect(result).toBe(5044655);
+		expect(result).resolves.toBe(5044655);
 	});
 
 	it("should solve part 2", () => {
@@ -111,6 +111,6 @@ describe("Day 5", () => {
 		const result = solution.runPart2();
 
 		// Then
-		expect(result).toBe(7408802);
+		expect(result).resolves.toBe(7408802);
 	});
 });

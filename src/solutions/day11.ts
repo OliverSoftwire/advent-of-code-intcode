@@ -134,4 +134,4 @@ function solution2(program: string) {
 	return robot.renderImage();
 }
 
-export default new Solution("Day 11", solution1, solution2);
+export default new Solution(11, solution1, solution2);

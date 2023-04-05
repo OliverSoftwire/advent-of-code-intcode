@@ -39,4 +39,4 @@ function solution2(program: string) {
 	return diagnosticCode;
 }
 
-export default new Solution("Day 5", solution1, solution2);
+export default new Solution(5, solution1, solution2);

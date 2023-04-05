@@ -82,4 +82,4 @@ function solution2(program: string) {
 	return Math.max(...results);
 }
 
-export default new Solution("Day 7", solution1, solution2);
+export default new Solution(7, solution1, solution2);

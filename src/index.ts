@@ -1,9 +1,9 @@
 import solutions from "./solutions";
 
-solutions.forEach((solution) => {
-	const result = solution.run();
+solutions.map(async (solution) => {
+	const result = await solution.run();
 
-	console.log(solution.name);
+	console.log(`Day ${solution.day}`);
 	console.log(result.part1);
 	console.log(result.part2);
 });
