@@ -5,6 +5,8 @@ import { TextDisplay } from "../utils/TextDisplay";
 import { Vector2 } from "../utils/Vector2";
 import { sleep } from "../utils/sleep";
 
+const SHOW_ANIMATION = true;
+
 enum PaletteIndex {
 	Empty,
 	Wall,
@@ -199,10 +201,12 @@ async function solution2(program: string): Promise<number> {
 		lastBallPosition = cabinet.ballPosition;
 	});
 
-	for (const frame of frames) {
-		console.clear();
-		console.log(frame);
-		await sleep((1 / 30) * 1000);
+	if (process.env.NODE_ENV !== "test" && SHOW_ANIMATION) {
+		for (const frame of frames) {
+			console.clear();
+			console.log(frame);
+			await sleep((1 / 30) * 1000);
+		}
 	}
 
 	return cabinet.score;
