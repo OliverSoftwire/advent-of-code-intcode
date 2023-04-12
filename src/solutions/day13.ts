@@ -45,7 +45,7 @@ interface ScoreCommand extends Command {
 	y: 0;
 }
 
-enum JoystickCommands {
+enum JoystickPosition {
 	Left = -1,
 	Neutral = 0,
 	Right = 1,
@@ -61,8 +61,13 @@ function commandIsScoreCommand(command: Command): command is ScoreCommand {
 
 class Cabinet {
 	private vm = new IntcodeVM();
+	private display = new TextDisplay<PaletteIndex>(
+		palette,
+		PaletteIndex.Empty
+	);
 
-	private paddlePosition = new Vector2(0, 0);
+	public paddlePosition = new Vector2(0, 0);
+	public ballPosition = new Vector2(0, 0);
 	public score = 0;
 
 	constructor(program: string, runWithQuarters?: boolean) {
@@ -84,11 +89,26 @@ class Cabinet {
 			if (commandIsPaintCommand(command)) {
 				if (command.value === PaletteIndex.HorizontalPaddle) {
 					this.paddlePosition = new Vector2(command.x, command.y);
+				} else if (command.value === PaletteIndex.Ball) {
+					this.ballPosition = new Vector2(command.x, command.y);
 				}
 
+				this.display.paintCell(
+					new Vector2(command.x, command.y),
+					command.value
+				);
 				onPaint(command);
 			}
 		}
+	}
+
+	public pushJoystickPosition(joystickPosition: JoystickPosition): void {
+		console.log("Moving joystick to ", joystickPosition);
+		this.vm.writeInput(joystickPosition);
+	}
+
+	public renderDisplay(): string {
+		return this.display.render();
 	}
 
 	private getNextCommand(): Command | undefined {
@@ -124,7 +144,32 @@ function solution1(program: string): number {
 function solution2(program: string): number {
 	const cabinet = new Cabinet(program, true);
 
-	cabinet.runWith(({ x, y, value }) => {});
+	let lastBallPosition = cabinet.ballPosition;
+	cabinet.runWith(({ value }) => {
+		if (value !== PaletteIndex.Ball) {
+			return;
+		}
+
+		console.log(cabinet.renderDisplay());
+
+		if (cabinet.paddlePosition.x === cabinet.ballPosition.x) {
+			const ballDelta = cabinet.ballPosition.sub(lastBallPosition);
+
+			if (ballDelta.x > 0) {
+				cabinet.pushJoystickPosition(JoystickPosition.Right);
+			} else {
+				cabinet.pushJoystickPosition(JoystickPosition.Left);
+			}
+		} else {
+			if (cabinet.paddlePosition.x > cabinet.ballPosition.x) {
+				cabinet.pushJoystickPosition(JoystickPosition.Left);
+			} else if (cabinet.paddlePosition.x < cabinet.ballPosition.x) {
+				cabinet.pushJoystickPosition(JoystickPosition.Right);
+			}
+		}
+
+		lastBallPosition = cabinet.ballPosition;
+	});
 
 	return cabinet.score;
 }
