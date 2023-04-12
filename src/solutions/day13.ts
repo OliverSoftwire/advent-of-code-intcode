@@ -3,6 +3,7 @@ import { Solution } from "./Solution";
 import { IntcodeVM } from "../intcode";
 import { TextDisplay } from "../utils/TextDisplay";
 import { Vector2 } from "../utils/Vector2";
+import { sleep } from "../utils/sleep";
 
 enum PaletteIndex {
 	Empty,
@@ -47,7 +48,6 @@ interface ScoreCommand extends Command {
 
 enum JoystickPosition {
 	Left = -1,
-	Neutral = 0,
 	Right = 1,
 }
 
@@ -84,7 +84,6 @@ class Cabinet {
 		let command;
 		while ((command = this.getNextCommand())) {
 			if (commandIsScoreCommand(command)) {
-				console.log("SCORE", command);
 				this.score = command.value;
 				continue;
 			}
@@ -117,7 +116,6 @@ class Cabinet {
 	}
 
 	public pushJoystickPosition(joystickPosition: JoystickPosition): void {
-		console.log("Moving joystick to ", joystickPosition);
 		this.vm.writeInput(joystickPosition);
 	}
 
@@ -159,8 +157,10 @@ function solution1(program: string): number {
 	return numBlocks;
 }
 
-function solution2(program: string): number {
+async function solution2(program: string): Promise<number> {
 	const cabinet = new Cabinet(program, true);
+
+	const frames: string[] = [];
 
 	let lastBallPosition = cabinet.ballPosition;
 	cabinet.runWith(({ value }) => {
@@ -168,7 +168,7 @@ function solution2(program: string): number {
 			return;
 		}
 
-		console.log(cabinet.renderDisplay());
+		frames.push(cabinet.renderDisplay());
 
 		if (cabinet.paddlePosition.x === cabinet.ballPosition.x) {
 			const ballDelta = cabinet.ballPosition.sub(lastBallPosition);
@@ -198,6 +198,12 @@ function solution2(program: string): number {
 
 		lastBallPosition = cabinet.ballPosition;
 	});
+
+	for (const frame of frames) {
+		console.clear();
+		console.log(frame);
+		await sleep((1 / 30) * 1000);
+	}
 
 	return cabinet.score;
 }

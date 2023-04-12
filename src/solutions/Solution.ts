@@ -3,7 +3,9 @@ import path from "path";
 
 export type SolutionResultType = number | string;
 
-export type SolutionPart = (input: string) => SolutionResultType;
+export type SolutionPart = (
+	input: string
+) => SolutionResultType | Promise<SolutionResultType>;
 
 export interface SolutionResult {
 	day: number;
