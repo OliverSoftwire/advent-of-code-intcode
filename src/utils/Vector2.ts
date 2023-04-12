@@ -16,4 +16,8 @@ export class Vector2 {
 	max(b: Vector2): Vector2 {
 		return new Vector2(Math.max(this.x, b.x), Math.max(this.y, b.y));
 	}
+
+	toString(): string {
+		return `(${this.x},${this.y})`;
+	}
 }

@@ -70,6 +70,8 @@ class Cabinet {
 	public ballPosition = new Vector2(0, 0);
 	public score = 0;
 
+	private blocks: Record<string, boolean> = {};
+
 	constructor(program: string, runWithQuarters?: boolean) {
 		this.vm.loadProgram(program);
 
@@ -82,21 +84,33 @@ class Cabinet {
 		let command;
 		while ((command = this.getNextCommand())) {
 			if (commandIsScoreCommand(command)) {
+				console.log("SCORE", command);
 				this.score = command.value;
 				continue;
 			}
 
 			if (commandIsPaintCommand(command)) {
-				if (command.value === PaletteIndex.HorizontalPaddle) {
-					this.paddlePosition = new Vector2(command.x, command.y);
-				} else if (command.value === PaletteIndex.Ball) {
-					this.ballPosition = new Vector2(command.x, command.y);
+				const position = new Vector2(command.x, command.y);
+
+				switch (command.value) {
+					case PaletteIndex.HorizontalPaddle:
+						this.paddlePosition = position;
+						break;
+					case PaletteIndex.Ball:
+						this.ballPosition = position;
+						break;
+					case PaletteIndex.Block:
+						this.blocks[position.toString()] = true;
+						break;
+					case PaletteIndex.Empty:
+						if (this.isBlockAtPosition(position)) {
+							delete this.blocks[position.toString()];
+						}
+						break;
+					default:
 				}
 
-				this.display.paintCell(
-					new Vector2(command.x, command.y),
-					command.value
-				);
+				this.display.paintCell(position, command.value);
 				onPaint(command);
 			}
 		}
@@ -109,6 +123,10 @@ class Cabinet {
 
 	public renderDisplay(): string {
 		return this.display.render();
+	}
+
+	public isBlockAtPosition(position: Vector2): boolean {
+		return this.blocks[position.toString()] ?? false;
 	}
 
 	private getNextCommand(): Command | undefined {
@@ -154,6 +172,16 @@ function solution2(program: string): number {
 
 		if (cabinet.paddlePosition.x === cabinet.ballPosition.x) {
 			const ballDelta = cabinet.ballPosition.sub(lastBallPosition);
+			if (
+				cabinet.isBlockAtPosition(
+					cabinet.ballPosition.add(ballDelta)
+				) ||
+				cabinet.isBlockAtPosition(
+					cabinet.ballPosition.add(new Vector2(ballDelta.x, 0))
+				)
+			) {
+				ballDelta.x = -ballDelta.x;
+			}
 
 			if (ballDelta.x > 0) {
 				cabinet.pushJoystickPosition(JoystickPosition.Right);
