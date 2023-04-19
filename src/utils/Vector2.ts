@@ -17,6 +17,10 @@ export class Vector2 {
 		return new Vector2(Math.max(this.x, b.x), Math.max(this.y, b.y));
 	}
 
+	clone(): Vector2 {
+		return new Vector2(this.x, this.y);
+	}
+
 	toString(): string {
 		return `(${this.x},${this.y})`;
 	}

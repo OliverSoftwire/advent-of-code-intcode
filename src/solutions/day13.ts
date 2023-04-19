@@ -5,7 +5,7 @@ import { TextDisplay } from "../utils/TextDisplay";
 import { Vector2 } from "../utils/Vector2";
 import { sleep } from "../utils/sleep";
 
-const SHOW_ANIMATION = true;
+const SHOW_ANIMATION = false;
 
 enum PaletteIndex {
 	Empty,
