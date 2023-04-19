@@ -23,7 +23,7 @@ enum PaletteIndex {
 	RobotVoid = 88,
 }
 
-const robotColour = chalk.grey;
+const robotColour = chalk.whiteBright;
 
 const palette = {
 	[PaletteIndex.Scaffold]: {
@@ -32,6 +32,7 @@ const palette = {
 	},
 	[PaletteIndex.Empty]: {
 		character: ".",
+		colour: chalk.grey,
 	},
 	[PaletteIndex.Intersection]: {
 		character: "O",
