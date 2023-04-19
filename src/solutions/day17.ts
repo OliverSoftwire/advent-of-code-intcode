@@ -95,7 +95,6 @@ function solution1(program: string): number {
 		}
 
 		display.paintCell(position, PaletteIndex.Intersection);
-		console.log(position);
 		sum += position.x * position.y;
 	});
 
