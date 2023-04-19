@@ -4,9 +4,9 @@ import { Solution } from "./Solution";
 function solution1(program: string) {
 	const vm = new IntcodeVM();
 
-	vm.loadProgram(program);
-	vm.writeMemory(1, 12);
-	vm.writeMemory(2, 2);
+	vm.loadProgramAndReset(program);
+	vm.writeValueToMemory(1, 12);
+	vm.writeValueToMemory(2, 2);
 
 	return vm.runUntilComplete()[0];
 }
@@ -14,19 +14,19 @@ function solution1(program: string) {
 function solution2(program: string, output: number) {
 	const vm = new IntcodeVM();
 
-	vm.loadProgram(program);
+	vm.loadProgramAndReset(program);
 	const offset = vm.runUntilComplete()[0];
 
 	vm.reset();
-	vm.writeMemory(1, 1);
+	vm.writeValueToMemory(1, 1);
 	const coefficient = vm.runUntilComplete()[0] - offset;
 
 	const noun = Math.floor((output - offset) / coefficient);
 	const verb = output - (coefficient * noun + offset);
 
 	vm.reset();
-	vm.writeMemory(1, noun);
-	vm.writeMemory(2, verb);
+	vm.writeValueToMemory(1, noun);
+	vm.writeValueToMemory(2, verb);
 	if (vm.runUntilComplete()[0] !== output) {
 		throw new Error("Inputs do not produce desired output");
 	}

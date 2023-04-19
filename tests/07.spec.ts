@@ -11,7 +11,7 @@ it("should pass the example program", () => {
 	const expected = 3500;
 
 	const vm = new IntcodeVM();
-	vm.loadProgram(program);
+	vm.loadProgramAndReset(program);
 
 	// When
 	const result = vm.runUntilComplete();

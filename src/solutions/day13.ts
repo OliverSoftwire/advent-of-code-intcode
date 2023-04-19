@@ -75,10 +75,10 @@ class Cabinet {
 	private blocks: Record<string, boolean> = {};
 
 	constructor(program: string, runWithQuarters?: boolean) {
-		this.vm.loadProgram(program);
+		this.vm.loadProgramAndReset(program);
 
 		if (runWithQuarters) {
-			this.vm.writeMemory(0, 2);
+			this.vm.writeValueToMemory(0, 2);
 		}
 	}
 
@@ -118,7 +118,7 @@ class Cabinet {
 	}
 
 	public pushJoystickPosition(joystickPosition: JoystickPosition): void {
-		this.vm.writeInput(joystickPosition);
+		this.vm.pushInputToBuffer(joystickPosition);
 	}
 
 	public renderDisplay(): string {

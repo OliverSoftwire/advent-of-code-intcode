@@ -4,8 +4,8 @@ import { Solution } from "./Solution";
 function solution1(program: string) {
 	const vm = new IntcodeVM();
 
-	vm.loadProgram(program);
-	vm.writeInput(1);
+	vm.loadProgramAndReset(program);
+	vm.pushInputToBuffer(1);
 
 	vm.runUntilComplete();
 
@@ -26,12 +26,12 @@ function solution1(program: string) {
 function solution2(program: string) {
 	const vm = new IntcodeVM();
 
-	vm.loadProgram(program);
-	vm.writeInput(5);
+	vm.loadProgramAndReset(program);
+	vm.pushInputToBuffer(5);
 
 	vm.runUntilComplete();
 
-	const diagnosticCode = vm.readOutput();
+	const diagnosticCode = vm.popOutputFromBuffer();
 	if (diagnosticCode === undefined) {
 		throw new Error("No output was received");
 	}

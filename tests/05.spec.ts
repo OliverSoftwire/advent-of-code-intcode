@@ -8,7 +8,7 @@ it("should pass the example program", () => {
 	const expected = 99;
 
 	const vm = new IntcodeVM();
-	vm.loadProgram(program);
+	vm.loadProgramAndReset(program);
 
 	// When
 	const result = vm.runUntilComplete();
@@ -27,20 +27,20 @@ describe("part 2 examples", () => {
 		it(name, () => {
 			// Given
 			const vm = new IntcodeVM();
-			vm.loadProgram(program);
+			vm.loadProgramAndReset(program);
 
 			// When
 			inputs.forEach((input) => {
-				vm.writeInput(input);
+				vm.pushInputToBuffer(input);
 				vm.runUntilComplete();
 				vm.reset();
 			});
 
 			// Then
 			expectedOutputs.forEach((expected) =>
-				expect(vm.readOutput()).toBe(expected)
+				expect(vm.popOutputFromBuffer()).toBe(expected)
 			);
-			expect(vm.readOutput()).toBeUndefined();
+			expect(vm.popOutputFromBuffer()).toBeUndefined();
 		});
 	}
 

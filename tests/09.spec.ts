@@ -10,7 +10,7 @@ describe("part 1 examples", () => {
 		];
 
 		const vm = new IntcodeVM();
-		vm.loadProgram(program.join(","));
+		vm.loadProgramAndReset(program.join(","));
 
 		// When
 		vm.runUntilComplete();
@@ -24,13 +24,13 @@ describe("part 1 examples", () => {
 		const program = "1102,34915192,34915192,7,4,7,99,0";
 
 		const vm = new IntcodeVM();
-		vm.loadProgram(program);
+		vm.loadProgramAndReset(program);
 
 		// When
 		vm.runUntilComplete();
 
 		// Then
-		expect(vm.readOutput()?.toString()).toMatch(/\d{16}/);
+		expect(vm.popOutputFromBuffer()?.toString()).toMatch(/\d{16}/);
 	});
 
 	it("should pass example 3", () => {
@@ -38,13 +38,13 @@ describe("part 1 examples", () => {
 		const program = [104, 1125899906842624, 99];
 
 		const vm = new IntcodeVM();
-		vm.loadProgram(program.join(","));
+		vm.loadProgramAndReset(program.join(","));
 
 		// When
 		vm.runUntilComplete();
 
 		// Then
-		expect(vm.readOutput()).toBe(program[1]);
+		expect(vm.popOutputFromBuffer()).toBe(program[1]);
 	});
 });
 

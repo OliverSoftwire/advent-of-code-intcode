@@ -42,7 +42,7 @@ class Robot {
 	private map: Record<string, number> = {};
 
 	constructor(program: string, startOnWhite?: boolean) {
-		this.vm.loadProgram(program);
+		this.vm.loadProgramAndReset(program);
 
 		if (startOnWhite) {
 			this.paintSquare(1);
@@ -51,7 +51,7 @@ class Robot {
 
 	paintSquares() {
 		while (true) {
-			this.vm.writeInput(this.getCurrentSquareColour());
+			this.vm.pushInputToBuffer(this.getCurrentSquareColour());
 
 			const colourToPaint = this.vm.runUntilOutput();
 			const directionToTurn = this.vm.runUntilOutput();

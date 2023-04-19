@@ -62,7 +62,7 @@ const palette = {
 
 function solution1(program: string): number {
 	const vm = new IntcodeVM();
-	vm.loadProgram(program);
+	vm.loadProgramAndReset(program);
 	vm.runUntilComplete();
 
 	const display = new TextDisplay<PaletteIndex>(palette, PaletteIndex.Empty);

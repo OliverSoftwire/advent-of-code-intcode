@@ -17,7 +17,7 @@ class IntcodeError extends Error {
 export class IntcodeVM {
 	program: number[] = [];
 
-	halted = true;
+	isHalted = true;
 
 	private memory: number[] = [];
 
@@ -39,34 +39,35 @@ export class IntcodeVM {
 	constructor() {}
 
 	reset() {
-		this.halted = false;
+		this.isHalted = false;
 		this.memory = [...this.program];
 		this.instructionPointer = 0;
 		this.instructionPointerModifiedThisCycle = false;
 	}
 
-	loadProgram(programData: string) {
+	loadProgramAndReset(programData: string) {
 		this.program = programData.split(",").map((int) => parseInt(int));
 		this.reset();
 	}
 
 	step() {
-		if (this.halted) {
-			this.throwVMError(
+		if (this.isHalted) {
+			this.throwIntcodeError(
 				"Program has finished running, cannot execute instruction"
 			);
 		}
 
-		const opcodeId = this.readMemory(this.instructionPointer) % 100;
+		const opcodeId =
+			this.readValueFromMemory(this.instructionPointer) % 100;
 		const opcode = opcodes[opcodeId];
 		if (!opcode) {
-			this.throwVMError(`Invalid opcode ${opcodeId}`);
+			this.throwIntcodeError(`Invalid opcode ${opcodeId}`);
 		}
 
 		const args = opcode.parameters.map(this.getArgForParameter());
 
 		opcode.action(this, ...args);
-		if (this.halted) {
+		if (this.isHalted) {
 			return false;
 		}
 
@@ -84,49 +85,51 @@ export class IntcodeVM {
 	}
 
 	runUntilOutput() {
-		if (this.halted) {
+		if (this.isHalted) {
 			return undefined;
 		}
 
 		const prevOutputLen = this.outputBuffer.length;
 		while (this.step() && this.outputBuffer.length === prevOutputLen) {}
-		return this.halted ? undefined : this.outputBuffer.pop();
+		return this.isHalted ? undefined : this.outputBuffer.pop();
 	}
 
-	writeMemory(address: number, value: number) {
+	writeValueToMemory(address: number, value: number) {
 		if (address < 0) {
-			this.throwVMError("Memory address must be positive");
+			this.throwIntcodeError("Memory address must be positive");
 		}
 
 		this.memory[address] = value;
 	}
 
-	readMemory(address: number) {
+	readValueFromMemory(address: number) {
 		if (address < 0) {
-			this.throwVMError("Memory address must be positive");
+			this.throwIntcodeError("Memory address must be positive");
 		}
 
 		return this.memory[address] ?? 0;
 	}
 
-	writeInput(input: number) {
+	pushInputToBuffer(input: number) {
 		this.inputBuffer.push(input);
 	}
 
-	readInput(): number | undefined {
+	popInputFromBuffer(): number | undefined {
 		return this.inputBuffer.shift();
 	}
 
-	writeOutput(output: number) {
+	pushOutputToBuffer(output: number) {
 		this.outputBuffer.push(output);
 	}
 
-	readOutput(): number | undefined {
+	popOutputFromBuffer(): number | undefined {
 		return this.outputBuffer.shift();
 	}
 
 	private decodeParameterModes(): ParameterMode[] {
-		return Math.floor(this.readMemory(this.instructionPointer) / 100)
+		return Math.floor(
+			this.readValueFromMemory(this.instructionPointer) / 100
+		)
 			.toString()
 			.split("")
 			.map(Number)
@@ -137,14 +140,16 @@ export class IntcodeVM {
 		const parameterModes = this.decodeParameterModes();
 
 		return (parameter: ParameterType, index: number) => {
-			const argument = this.readMemory(
+			const argument = this.readValueFromMemory(
 				this.instructionPointer + 1 + index
 			);
 
 			const mode = parameterModes[index] ?? ParameterMode.Position;
 			if (mode === ParameterMode.Immediate) {
 				if (parameter === ParameterType.Write) {
-					this.throwVMError("Cannot write to an immediate parameter");
+					this.throwIntcodeError(
+						"Cannot write to an immediate parameter"
+					);
 				}
 
 				return argument;
@@ -152,7 +157,7 @@ export class IntcodeVM {
 
 			const address = this.getAddressForParameter(mode, argument);
 			return parameter === ParameterType.Read
-				? this.readMemory(address)
+				? this.readValueFromMemory(address)
 				: address;
 		};
 	}
@@ -164,15 +169,15 @@ export class IntcodeVM {
 			case ParameterMode.Relative:
 				return this.relativeBase + argument;
 			case ParameterMode.Immediate:
-				this.throwVMError(
+				this.throwIntcodeError(
 					"Cannot interpret immediate mode parameter as an address"
 				);
 			default:
-				this.throwVMError(`Invalid parameter mode ${mode}`);
+				this.throwIntcodeError(`Invalid parameter mode ${mode}`);
 		}
 	}
 
-	private throwVMError(message: string): never {
+	private throwIntcodeError(message: string): never {
 		throw new IntcodeError(this, message);
 	}
 }

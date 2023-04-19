@@ -6,12 +6,12 @@ class Amplifier {
 	private vm = new IntcodeVM();
 
 	constructor(program: string, phase: number) {
-		this.vm.loadProgram(program);
-		this.vm.writeInput(phase);
+		this.vm.loadProgramAndReset(program);
+		this.vm.pushInputToBuffer(phase);
 	}
 
 	run(input: number): number | undefined {
-		this.vm.writeInput(input);
+		this.vm.pushInputToBuffer(input);
 		return this.vm.runUntilOutput();
 	}
 }
