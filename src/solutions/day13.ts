@@ -4,6 +4,7 @@ import { IntcodeVM } from "../IntcodeVM";
 import { TextDisplay } from "../utils/TextDisplay";
 import { Vector2 } from "../utils/Vector2";
 import { sleep } from "../utils/sleep";
+import chalk from "chalk";
 
 enum PaletteIndex {
 	Empty,
@@ -11,7 +12,24 @@ enum PaletteIndex {
 	Block,
 	HorizontalPaddle,
 	Ball,
+	BlockRed,
+	BlockOrange,
+	BlockYellow,
+	BlockGreen,
+	BlockBlue,
+	BlockPurple,
+	BlockCyan,
 }
+
+const blockColours = [
+	PaletteIndex.BlockRed,
+	PaletteIndex.BlockOrange,
+	PaletteIndex.BlockYellow,
+	PaletteIndex.BlockGreen,
+	PaletteIndex.BlockBlue,
+	PaletteIndex.BlockPurple,
+	PaletteIndex.BlockCyan,
+];
 
 const palette = {
 	[PaletteIndex.Empty]: {
@@ -19,15 +37,45 @@ const palette = {
 	},
 	[PaletteIndex.Wall]: {
 		character: "▓",
+		colour: chalk.grey.bgGrey,
 	},
 	[PaletteIndex.Block]: {
 		character: "▃",
 	},
 	[PaletteIndex.HorizontalPaddle]: {
 		character: "━",
+		colour: chalk.blue,
 	},
 	[PaletteIndex.Ball]: {
 		character: "◍",
+	},
+	[PaletteIndex.BlockRed]: {
+		character: "▃",
+		colour: chalk.red,
+	},
+	[PaletteIndex.BlockOrange]: {
+		character: "▃",
+		colour: chalk.hex("#fcba03"),
+	},
+	[PaletteIndex.BlockYellow]: {
+		character: "▃",
+		colour: chalk.yellow,
+	},
+	[PaletteIndex.BlockGreen]: {
+		character: "▃",
+		colour: chalk.green,
+	},
+	[PaletteIndex.BlockBlue]: {
+		character: "▃",
+		colour: chalk.blue,
+	},
+	[PaletteIndex.BlockPurple]: {
+		character: "▃",
+		colour: chalk.hex("#be03fc"),
+	},
+	[PaletteIndex.BlockCyan]: {
+		character: "▃",
+		colour: chalk.cyan,
 	},
 };
 
@@ -90,6 +138,7 @@ class Cabinet {
 
 			if (commandIsPaintCommand(command)) {
 				const position = new Vector2(command.x, command.y);
+				let paletteIndex = command.value;
 
 				switch (command.value) {
 					case PaletteIndex.HorizontalPaddle:
@@ -100,6 +149,8 @@ class Cabinet {
 						break;
 					case PaletteIndex.Block:
 						this.blocks[position.toString()] = true;
+						paletteIndex =
+							blockColours[position.y % blockColours.length];
 						break;
 					case PaletteIndex.Empty:
 						if (this.isBlockAtPosition(position)) {
@@ -109,7 +160,7 @@ class Cabinet {
 					default:
 				}
 
-				this.display.paintCell(position, command.value);
+				this.display.paintCell(position, paletteIndex);
 				onPaint(command);
 			}
 		}
