@@ -1,4 +1,4 @@
-import { IntcodeVM } from "intcode";
+import { IntcodeVM } from "IntcodeVM";
 import solution from "solutions/day2";
 
 it("should pass the example program", () => {

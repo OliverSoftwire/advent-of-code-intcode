@@ -1,5 +1,5 @@
 import { Solution } from "./Solution";
-import { IntcodeVM } from "../intcode";
+import { IntcodeVM } from "../IntcodeVM";
 
 function solution1(program: string) {
 	const vm = new IntcodeVM();

@@ -1,4 +1,4 @@
-import { IntcodeVM } from "intcode";
+import { IntcodeVM } from "IntcodeVM";
 import solution, {
 	runPhaseSequence,
 	runPhaseSequenceWithFeedback,

@@ -1,4 +1,4 @@
-import { IntcodeVM } from "../src/intcode";
+import { IntcodeVM } from "../src/IntcodeVM";
 import solution from "../src/solutions/day9";
 
 describe("part 1 examples", () => {

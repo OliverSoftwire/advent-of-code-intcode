@@ -1,5 +1,5 @@
 import { Solution } from "./Solution";
-import { IntcodeVM } from "../intcode";
+import { IntcodeVM } from "../IntcodeVM";
 import { mod } from "../utils/mod";
 import { Vector2 } from "../utils/Vector2";
 import { TextDisplay } from "../utils/TextDisplay";

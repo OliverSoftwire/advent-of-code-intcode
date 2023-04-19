@@ -1,4 +1,4 @@
-import { IntcodeVM } from "intcode";
+import { IntcodeVM } from "IntcodeVM";
 import solution from "solutions/day5";
 
 // TODO: Move this to describe / change name

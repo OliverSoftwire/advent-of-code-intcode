@@ -1,4 +1,4 @@
-import { IntcodeVM } from "../intcode";
+import { IntcodeVM } from "../IntcodeVM";
 import { Solution } from "./Solution";
 import { permuteArray } from "../utils/heapPermute";
 

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Solution } from "./Solution";
-import { IntcodeVM } from "../intcode";
+import { IntcodeVM } from "../IntcodeVM";
 import { TextDisplay } from "../utils/TextDisplay";
 import { Vector2 } from "../utils/Vector2";
 import { sleep } from "../utils/sleep";
