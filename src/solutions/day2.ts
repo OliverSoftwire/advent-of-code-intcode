@@ -1,4 +1,4 @@
-import { IntcodeVM } from "intcode";
+import { IntcodeVM } from "../intcode";
 import { Solution } from "./Solution";
 
 function solution1(program: string) {

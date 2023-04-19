@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"strict": true,
 		"outDir": "dist",
-		"module": "commonjs",
+		"module": "esnext",
 		"esModuleInterop": true,
 		"target": "esnext",
 		"moduleResolution": "node",
@@ -11,6 +11,8 @@
 	},
 	"lib": ["es2015"],
 	"ts-node": {
-		"require": ["tsconfig-paths/register"]
+		"require": ["tsconfig-paths/register"],
+		"esm": true,
+		"experimentalSpecifierResolution": "node"
 	}
 }

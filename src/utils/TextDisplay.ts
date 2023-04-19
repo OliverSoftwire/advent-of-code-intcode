@@ -1,7 +1,9 @@
 import { Vector2 } from "./Vector2";
+import { ChalkInstance } from "chalk";
 
 export interface PaletteValue {
 	character: string;
+	colour?: ChalkInstance;
 }
 
 type Palette<PaletteIndex extends number> = {
@@ -34,7 +36,9 @@ export class TextDisplay<PaletteIndex extends number> {
 					this.cells[this.hashCoordinate(new Vector2(x, y))] ??
 					this.backgroundPaletteIndex;
 
-				buffer += this.palette[paletteIndex].character;
+				const { character, colour } = this.palette[paletteIndex];
+
+				buffer += colour ? colour(character) : character;
 			}
 			buffer += "\n";
 		}
