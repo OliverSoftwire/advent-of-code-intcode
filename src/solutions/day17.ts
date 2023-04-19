@@ -98,7 +98,9 @@ function solution1(program: string): number {
 		sum += position.x * position.y;
 	});
 
-	console.log(display.render());
+	if (process.env.SHOW_SCAFFOLD) {
+		console.log(display.render());
+	}
 
 	return sum;
 }
