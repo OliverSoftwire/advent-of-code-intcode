@@ -80,9 +80,8 @@ function solution1(program: string): number {
 				scaffold[position.toString()] = position.clone();
 			default:
 				display.paintCell(position, output);
+				position.x++;
 		}
-
-		position.x++;
 	});
 
 	let sum = 0;
