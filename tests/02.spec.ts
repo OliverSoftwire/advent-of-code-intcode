@@ -10,10 +10,11 @@ it("should pass the example program", () => {
 	vm.loadProgramAndReset(program);
 
 	// When
-	const result = vm.runUntilComplete();
+	vm.runUntilComplete();
+	const result = vm.readValueFromMemory(0);
 
 	// Then
-	expect(result[0]).toBe(expected);
+	expect(result).toBe(expected);
 });
 
 it("should solve part 1", async () => {

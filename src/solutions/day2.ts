@@ -8,18 +8,24 @@ function solution1(program: string) {
 	vm.writeValueToMemory(1, 12);
 	vm.writeValueToMemory(2, 2);
 
-	return vm.runUntilComplete()[0];
+	vm.runUntilComplete();
+
+	return vm.readValueFromMemory(0);
 }
 
 function solution2(program: string, output: number) {
 	const vm = new IntcodeVM();
 
 	vm.loadProgramAndReset(program);
-	const offset = vm.runUntilComplete()[0];
+	vm.runUntilComplete();
+
+	const offset = vm.readValueFromMemory(0);
 
 	vm.reset();
 	vm.writeValueToMemory(1, 1);
-	const coefficient = vm.runUntilComplete()[0] - offset;
+	vm.runUntilComplete();
+
+	const coefficient = vm.readValueFromMemory(0) - offset;
 
 	const noun = Math.floor((output - offset) / coefficient);
 	const verb = output - (coefficient * noun + offset);
@@ -27,7 +33,9 @@ function solution2(program: string, output: number) {
 	vm.reset();
 	vm.writeValueToMemory(1, noun);
 	vm.writeValueToMemory(2, verb);
-	if (vm.runUntilComplete()[0] !== output) {
+	vm.runUntilComplete();
+
+	if (vm.readValueFromMemory(0) !== output) {
 		throw new Error("Inputs do not produce desired output");
 	}
 

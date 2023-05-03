@@ -1,8 +1,7 @@
 import { IntcodeVM } from "IntcodeVM";
 import solution from "solutions/day5";
 
-// TODO: Move this to describe / change name
-it("should pass the example program", () => {
+it("should pass part 1 example", () => {
 	// Given
 	const program = "1002,4,3,4,33";
 	const expected = 99;
@@ -11,10 +10,11 @@ it("should pass the example program", () => {
 	vm.loadProgramAndReset(program);
 
 	// When
-	const result = vm.runUntilComplete();
+	vm.runUntilComplete();
+	const result = vm.readValueFromMemory(4);
 
 	// Then
-	expect(result[4]).toBe(expected);
+	expect(result).toBe(expected);
 });
 
 describe("part 2 examples", () => {

@@ -81,7 +81,6 @@ export class IntcodeVM {
 
 	runUntilComplete() {
 		while (this.step()) {}
-		return [...this.memory];
 	}
 
 	runUntilOutput() {

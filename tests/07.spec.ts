@@ -4,22 +4,6 @@ import solution, {
 	runPhaseSequenceWithFeedback,
 } from "solutions/day7";
 
-// TODO: Move this to describe
-it("should pass the example program", () => {
-	// Given
-	const program = "1,9,10,3,2,3,11,0,99,30,40,50";
-	const expected = 3500;
-
-	const vm = new IntcodeVM();
-	vm.loadProgramAndReset(program);
-
-	// When
-	const result = vm.runUntilComplete();
-
-	// Then
-	expect(result[0]).toBe(expected);
-});
-
 describe("part 1 examples", () => {
 	it("should pass example 1", () => {
 		// Given
